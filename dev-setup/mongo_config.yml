@@ -1,0 +1,9 @@
+security:
+  keyFile: /file.key
+replication:
+  replSetName: rs0
+net:
+  bindIpAll: true
+storage:
+  journal:
+    enabled: true

@@ -1,0 +1,48 @@
+version: '3.6'
+services:
+
+  solr:
+    image: solr:8.7.0
+    ports:
+      - 8983:8983
+    volumes:
+      - type: bind
+        source: ../src/main/resources/solr/collections/orders/
+        target: /var/solr/data/orders
+
+  mongodb:
+    image: mongo:4.4
+    hostname: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    configs:
+      - source: mongo_config
+        target: /config.yml
+        mode: 0555
+      - source: mongo_file-key
+        target: /file.key
+        mode: 0400
+      - source: rs-init
+        target: /scripts/rsinit.sh
+        mode: 0555
+    #in order to automate init of replica set there is healthcheck trick. On production rs should be init manualy
+    healthcheck:
+      test: bash /scripts/rsinit.sh || exit 1
+      start_period: 15s
+      interval: 15s
+    command: ["/usr/bin/mongod", "--config", "config.yml"]
+
+configs:
+  mongo_file-key:
+    file: ./file.key
+  mongo_config:
+    file: ./mongo_config.yml
+  rs-init:
+    file: ./rsinit.sh
+
+
+volumes:
+  mongo-data:
+
