@@ -10,7 +10,7 @@ class ProductToView : Converter<Product, ProductView> {
 
     override fun convert(source: Product): ProductView? {
         val flatMap = source.attributes
-            .mapValues { e -> e.value.rawValue }
+            .mapValues { e -> e.value.atbValue }
             .mapKeys { e -> e.key.name }
         return ProductView(source.id, flatMap);
     }

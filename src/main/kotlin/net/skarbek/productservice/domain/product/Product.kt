@@ -7,5 +7,6 @@ class Product
 constructor(
     var id: String,
     var identifiers: Set<ProductIdentifier>,
-    var attributes: Map<AttributeDefinition, AttributeValue>
+    var attributes: Map<AttributeDefinition, AttributeValue>,
+    var variants: Set<Variant>
 )

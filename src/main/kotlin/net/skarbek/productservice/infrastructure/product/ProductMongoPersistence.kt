@@ -9,5 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class ProductMongoPersistence(
     var id: ObjectId,
     var identifiers: Map<String, String>,
-    var attributes: Map<String, String>
+    var attributes: Map<String, String>,
+    var variants: List<VariantPersistence>
 )

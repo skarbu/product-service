@@ -1,8 +1,13 @@
 package net.skarbek.productservice.domain.product.id
 
-enum class IdType {
+import net.skarbek.productservice.domain.attribute.AttributeLevel
 
-    EAN,
-    PHARMINDEX,
+enum class IdType(var level: AttributeLevel) {
+
+    INTERNAL(AttributeLevel.PRODUCT),
+    CSIOZ(AttributeLevel.PRODUCT),
+    EAN(AttributeLevel.VARIANT),
+
+
 
 }

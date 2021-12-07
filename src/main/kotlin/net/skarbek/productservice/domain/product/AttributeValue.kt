@@ -1,7 +1,10 @@
 package net.skarbek.productservice.domain.product
 
 class AttributeValue(
-    var rawValue: String
+     private var rawValue: String
 ) {
+
+    val atbValue = rawValue.trim().replace("\\s+".toRegex(), " ");
+
 
 }

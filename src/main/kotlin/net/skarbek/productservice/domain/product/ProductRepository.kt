@@ -1,18 +1,21 @@
 package net.skarbek.productservice.domain.product
 
-import net.skarbek.productservice.domain.product.id.IdType
+import net.skarbek.productservice.domain.product.id.ProductIdentifier
 import net.skarbek.productservice.infrastructure.product.ProductMongoPersistence
 import net.skarbek.productservice.infrastructure.product.ProductPersistenceRepository
 import org.springframework.core.convert.ConversionService
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria.where
+import org.springframework.data.mongodb.core.query.Query.query
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import java.util.*
 
 @Component
 class ProductRepository(
     val productPersistenceRepository: ProductPersistenceRepository,
-    val conversionService: ConversionService
+    val conversionService: ConversionService,
+    val mongoTemplate: ReactiveMongoTemplate
 ) {
     fun save(product: Product): Mono<Product> {
         val productMongoPersistence =
@@ -29,8 +32,23 @@ class ProductRepository(
             .mapNotNull { result -> conversionService.convert(result, Product::class.java) }
     }
 
-    fun findById(ean: IdType, s: String): Optional<Product> {
-        TODO("Not yet implemented")
+    fun findByProductId(productIdentifier: ProductIdentifier): Flux<Product> {
+        return mongoTemplate.find(
+            query(where("identifiers." + productIdentifier.idType).`is`(productIdentifier.idValue)),
+            ProductMongoPersistence::class.java
+        )
+            .mapNotNull { result -> conversionService.convert(result, Product::class.java) }
+
+
+    }
+
+    fun findByVariantId(productIdentifier: ProductIdentifier): Flux<Product> {
+        return mongoTemplate.find(
+            query(where("variants.ids." + productIdentifier.idType).`is`(productIdentifier.idValue)),
+            ProductMongoPersistence::class.java
+        )
+            .mapNotNull { result -> conversionService.convert(result, Product::class.java) }
+
     }
 
 }

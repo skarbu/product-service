@@ -18,10 +18,10 @@ class AddProductRequestToProduct(
 
     override fun convert(source: AddProductRequest): Product? {
         val id = ObjectId.get().toString()
-        val identifier = setOf(ProductIdentifier(IdType.EAN, source.ean))
+        val identifier = setOf(ProductIdentifier(IdType.INTERNAL, source.ean))
         val attributes = source.attributes
             .mapKeys { e -> attributeDefinitionRepository.getByName(e.key) }
             .mapValues { e -> AttributeValue(e.value) }
-        return Product(id = id, identifiers = identifier, attributes = attributes)
+        return Product(id = id, identifiers = identifier, attributes = attributes, setOf())
     }
 }
